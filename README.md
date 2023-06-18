@@ -1,2 +1,2 @@
 # OOP
-4 semester Java
+4 Семестр Java
