@@ -1,58 +1,46 @@
-package Model;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Scanner;
 
-public class FileWork {
-    private Path pathExpression = Path.of("HistoryOfExpression.txt");
-    private Path pathAnswers = Path.of("HistoryOfAnswers.txt");
-    private List<String> Expressions= new ArrayList<>();
-    private List<String> Answers= new ArrayList<>();
+public class PastCalculatins {
 
-    public List<String> showHistoryExpresson() {
-        try {
-            if (!Files.exists(pathExpression)) {
-                Files.createFile(pathExpression);
+    public static ArrayList<String> uravneny = new ArrayList<>();
+    UI ui = new UI();
+    public void uravneny(String n) {
+        uravneny.add(n);
+    }
+    public void pastUr(){
+        System.out.println("--------------- Прошлые вычисления ----------------\n" +
+                           "--- Чтобы открыть недавние вычисления нажмите 1 ---\n" +
+                           "----- Чтобы открыть все вычисления нажмите 2 ------\n" +
+                           "---------- Чтобы выйти в меню нажмите 3 -----------");
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        if (n==1 | n==2 | n==3) {
+            if (n == 1) {
+                recentCalculations();
             }
-            Expressions = Files.readAllLines(pathExpression);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return Expressions;
-    }
-
-    public List<String> showHistoryAnswer() {
-        try {
-            if (!Files.exists(pathAnswers)) {
-                Files.createFile(pathAnswers);
+            if (n == 2) {
+                allCalculations();
             }
-            Answers = Files.readAllLines(pathAnswers);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            if (n == 3 ){
+                ui.menu();
+            }
         }
-        return Answers;
+        else {
+            System.out.println("Вы выбрали не существующие действие");
+        }
     }
-
-    public void writeExpresson(String expr) throws IOException {
-        showHistoryExpresson();
-        Expressions.add(expr);
-        Files.write(pathExpression, Expressions);
+    private void recentCalculations(){
+        System.out.println("--------------- Недавние вычисления ---------------");
+        for(String l : uravneny){
+            System.out.println(l);
+        }
+        ui.menu();
     }
-
-    public void writeAnswer(String answ) throws IOException {
-        showHistoryAnswer();
-        Answers.add(answ);
-        Files.write(pathAnswers, Answers);
-    }
-
-    public String writeAnotherFile (String expr, String answ, String name) throws IOException {
-        String way = name + ".txt";
-        Path cd = Path.of(way);
-        Files.createFile(cd);
-        Files.write(cd, ("Уравнение: " + expr + " Ответ: " + answ).getBytes());
-        return way;
+    private void allCalculations(){
+        System.out.println("----------------- Все вычисления -----------------");
+        WorkingWithNotepad notepad = new WorkingWithNotepad();
+        notepad.readFile();
+        ui.menu();
     }
 }
